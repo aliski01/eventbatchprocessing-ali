@@ -15,7 +15,7 @@ resources:
     type: git
     source:
       uri: git@github.com:aliski01/eventbatchprocessing-ali.git
-      branch: master
+      branch: main
       private_key: |
          -----BEGIN OPENSSH PRIVATE KEY-----
          b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAMwAAAAtzc2gtZW
