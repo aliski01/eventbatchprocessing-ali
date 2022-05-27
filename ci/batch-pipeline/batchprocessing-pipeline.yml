@@ -1,0 +1,99 @@
+groups:
+  - name: all
+    jobs:
+      ##### Staging
+      - testing-staging
+      - build-deploy-staging
+      
+  - name: staging   
+    jobs:
+      - testing-staging
+      - build-deploy-staging
+
+resources:
+  - name: staging-repo
+    type: git
+    source:
+      uri: git@github.com:aliski01/eventbatchprocessing-ali.git
+      branch: master
+      private_key: |
+         -----BEGIN OPENSSH PRIVATE KEY-----
+         b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAMwAAAAtzc2gtZW
+         QyNTUxOQAAACBAIhezArOaESVUFOcV4f4dCRaFIKDPqC8abvrDVRa+WgAAAJjgvKrf4Lyq
+         3wAAAAtzc2gtZWQyNTUxOQAAACBAIhezArOaESVUFOcV4f4dCRaFIKDPqC8abvrDVRa+Wg
+         AAAECHAojj3+5v9HcyeRzYtmgz4pohsQALLBPXkaNBRvpqy0AiF7MCs5oRJVQU5xXh/h0J
+         FoUgoM+oLxpu+sNVFr5aAAAAE3NraW51ci5hbGlAZGNzZy5jb20BAg==
+         -----END OPENSSH PRIVATE KEY-----
+         
+
+jobs:
+  - name: testing-staging
+    plan:
+      - get: staging-repo
+        trigger: true
+      - task: unit-tests
+        input_mapping: { eventbatchprocessing-ali: staging-repo }
+        params:
+          GIT_BRANCH: master
+          APP: eventbatchprocessing-ali
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: maven
+              tag: 3.6.3
+          inputs:
+            - name: eventbatchprocessing-ali
+          run:
+            path: /bin/sh
+            args: ['./eventbatchprocessing-ali/ci/task/unit-tests.sh']
+          
+
+  - name: build-deploy-staging
+    plan:
+      - get: staging-repo
+        passed:
+          - testing-staging
+        trigger: true
+      - task: build-eventbatchprocessing-ali
+        input_mapping: { eventbatchprocessing-ali: staging-repo }
+        params:
+          APP: eventbatchprocessing-ali
+          BUILD: staging
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: maven
+              tag: 3.6.3
+          inputs:
+            - name: eventbatchprocessing-ali
+          outputs:
+            - name: compiled-eventbatchprocessing-ali-app
+          run:
+            path: /bin/sh
+            args: ['./eventbatchprocessing-ali/ci/task/build.stage-no-nx.sh']
+      - task: deploy-eventbatchprocessing-ali
+        input_mapping:
+          {eventbatchprocessing-ali: staging-repo, compiledFiles: compiled-eventbatchprocessing-ali-app }
+        params:
+          PWS_API: https://api.sys.an01.pcf.dcsg.com
+          PWS_ORG: bazaz-demo
+          PWS_USER: skinur.ali@dcsg.com
+          PWS_PWD: Computer2
+          PWS_SPACE: stage
+          APP: eventbatchprocessing-ali
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: nulldriver/cf-cli-resource
+          inputs:
+            - name: eventbatchprocessing-ali
+            - name: compiledFiles
+          run:
+            path: /bin/sh
+            args: ['./eventbatchprocessing-ali/ci/task/deploy-staging.sh']

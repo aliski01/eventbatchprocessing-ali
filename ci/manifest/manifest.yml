@@ -1,0 +1,6 @@
+---
+applications:
+  - name: eventbatchprocessing-ali
+    # command: npm start
+    buildpacks: 
+    - java_buildpack_offline
