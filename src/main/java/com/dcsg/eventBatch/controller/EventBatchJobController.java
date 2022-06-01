@@ -1,5 +1,6 @@
 package com.dcsg.eventBatch.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -45,13 +46,33 @@ public class EventBatchJobController {
 	}
 	
 	// Returning all events
-	@GetMapping(value = "/template/events")
-	public Map<String, Event> getEventsList() {	
+	/*
+	 * @GetMapping(value = "/template/events") public Map<String, Event>
+	 * getEventsList() {
+	 * 
+	 * return service.findAll(); }
+	 */
+	// Returning paginated events
+	@GetMapping(value = "/template/events")//?per_page={pageSize}&page={page}
+	public List<Event> getEventsList(@RequestParam(value="per_page",defaultValue = "10") int pageSize, 
+			@RequestParam(value="page",defaultValue = "1") int page) {	
 
-		return service.findAll();
+		if(!(pageSize>0 && page>0))
+		{
+			pageSize=10;
+			page=1;
+		}
+		List<Event> eventList = new  ArrayList<>();
+		try {
+			eventList = service.findAll(page, pageSize);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println("Inside controller");
+		}
+		return eventList;
 	}
-	
-	
+
 	// Response for specific Event ID
 	@GetMapping("template/events/{id}")
 	public ResponseEntity<Event> findById(@PathVariable("id") final String id) {

@@ -12,7 +12,7 @@ public class Event implements Serializable {
 	 */
 	private static final long serialVersionUID = 513592718583737857L;
 	private String type;
-    private String id;
+    private int id;
     private Date datetime_utc;
     private Venue venue;
     private boolean datetime_tbd;
@@ -44,7 +44,7 @@ public class Event implements Serializable {
     
     
     
-	public Event(String type, String id, Date datetime_utc, Venue venue, boolean datetime_tbd,
+	public Event(String type, int id, Date datetime_utc, Venue venue, boolean datetime_tbd,
 			ArrayList<Performer> performers, boolean is_open, ArrayList<Object> links, Date datetime_local,
 			boolean time_tbd, String short_title, Date visible_until_utc, Stats stats, ArrayList<Taxonomy> taxonomies,
 			String url, double score, Date announce_date, Date created_at, boolean date_tbd, String title,
@@ -95,10 +95,10 @@ public class Event implements Serializable {
 	public void setType(String type) {
 		this.type = type;
 	}
-	public String getId() {
+	public int getId() {
 		return id;
 	}
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 	public Date getDatetime_utc() {

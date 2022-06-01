@@ -57,12 +57,12 @@ class EventReaderTest {
 		  //when(builder.toUriString()).thenReturn(testUri);
 		Root eventData = new Root();
 		Event event1 = new Event();
-		event1.setId("1");
+		event1.setId(1);
 		event1.setShort_title("Event1");
 		Event event2 = new Event();
 		EventSetter.seEventDefault(event2);
 		log.debug("Eventdetails:  "+event2);
-		Event event3 = new Event(null, "3", null, null, false, null, false, null, null, false, null, null, null, null, null, 0, null, null, false, null, 0, null, null, eventData, event1, null, false, event2, null, null);
+		Event event3 = new Event(null, 3, null, null, false, null, false, null, null, false, null, null, null, null, null, 0, null, null, false, null, 0, null, null, eventData, event1, null, false, event2, null, null);
 		ArrayList<Event> events = new ArrayList<>();
 		events.add(event1);
 		events.add(event2);

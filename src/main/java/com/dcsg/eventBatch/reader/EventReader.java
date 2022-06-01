@@ -9,6 +9,7 @@ import org.springframework.batch.item.NonTransientResourceException;
 import org.springframework.batch.item.ParseException;
 import org.springframework.batch.item.UnexpectedInputException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -23,10 +24,10 @@ import com.dcsg.eventBatch.dto.Root;
 public class EventReader implements ItemReader<Event> {
 
 	private static final Logger log = LoggerFactory.getLogger(EventReader.class);
-
+	/*
+	 * @Value("${per_page}") private int perPage;
+	 */
 	RestTemplate restTemplate = new RestTemplate();
-	
-	/* @Value("${chunk_size}") private int chunkSize; */
 	 
 
 	@Autowired
@@ -40,9 +41,8 @@ public class EventReader implements ItemReader<Event> {
 	Root eventData = new Root();	
 
 	@Override
-	public Event read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
+	public Event read() {
 		// log.info("Reading the information of the next Event");
-		
 		if(nextEventIndex==0)
 		{
 			page++;	
@@ -58,7 +58,7 @@ public class EventReader implements ItemReader<Event> {
 
 		if(nextEventIndex >= eventList.size()) 
 		{
-			total = /* eventData.getMeta().total */ 20 - (page * perPage);			
+			total = /* eventData.getMeta().total */30 - (page * perPage);			
 			nextEventIndex = 0;
 
 			if(total>0) {

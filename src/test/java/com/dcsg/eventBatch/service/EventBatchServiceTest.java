@@ -2,6 +2,7 @@ package com.dcsg.eventBatch.service;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.List;
 import java.util.Map;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -33,7 +34,7 @@ class EventBatchServiceTest {
 
 	@Test
 	void testFindAll() {
-		Map<String, Event> eventList = batchService.findAll();
+		List<Event> eventList = batchService.findAll(1,10);
 		assertNotNull(eventList);
 	}
 

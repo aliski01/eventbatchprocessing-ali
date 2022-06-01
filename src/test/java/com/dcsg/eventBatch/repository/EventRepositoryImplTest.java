@@ -4,7 +4,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,17 +16,22 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ScanOptions;
+
 import com.dcsg.eventBatch.dto.Event;
 
 @ExtendWith(MockitoExtension.class)
 class EventRepositoryImplTest {
 	@Mock
-	RedisTemplate<String, Event> redisTemplate;
+	RedisTemplate<String, String> redisTemplate;
 	@InjectMocks
 	EventRepositoryImpl repositoryImpl;
-	HashOperations<String, String, Event> hashOperations;
+	@Mock
+	Cursor<Entry<Object, Object>> cursor;
+	HashOperations<String, String, String> hashOperations;
 
 	@SuppressWarnings("unchecked")
 	@BeforeEach
@@ -37,7 +44,7 @@ class EventRepositoryImplTest {
 	@Test
 	void testSave() {
 		Event event = new Event();
-		event.setId("543202");
+		event.setId(543202);
 		repositoryImpl.save(event);
 	}
 
@@ -45,11 +52,12 @@ class EventRepositoryImplTest {
 	void testFindAll() {
 
 		// hashOperations=redisTemplate.opsForHash();
-		Map<String, Event> eventMap = new HashMap<>();
+		//Map<String, Event> eventMap = new HashMap<>();
+		//Cursor<Entry<Object, Object>> cursor ;
 		Event event = new Event();
-		eventMap.put("1", event);
-		Mockito.when(hashOperations.entries(ArgumentMatchers.anyString())).thenReturn(eventMap);
-		Map<String, Event> eventList1 = repositoryImpl.findAll();
+		//eventMap.put("1", event);
+		//Mockito.when(cursor.hasNext()).thenReturn(true);
+		List<Event> eventList1 = repositoryImpl.findAll(1,10);
 		assertNotNull(eventList1);
 
 	}
@@ -58,7 +66,7 @@ class EventRepositoryImplTest {
 	void testFindById() {
 
 		Event event = new Event();
-		event.setId("123");
+		event.setId(123);
 		Mockito.doReturn(event).when(hashOperations).get(Mockito.any(), Mockito.any());
 		// Mockito.when(hashOperations.get(ArgumentMatchers.any(),
 		// ArgumentMatchers.any())).thenReturn(event);

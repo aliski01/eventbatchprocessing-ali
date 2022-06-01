@@ -2,6 +2,7 @@ package com.dcsg.eventBatch.controller;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.List;
 import java.util.Map;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -54,7 +55,7 @@ class EventBatchJobControllerTest {
 	
 	@Test
 	void testGetEventsList() {
-		Map<String, Event> eventList =batchJobController.getEventsList();
+		List<Event> eventList =batchJobController.getEventsList(1, 10);
 		assertNotNull(eventList);
 	}
 

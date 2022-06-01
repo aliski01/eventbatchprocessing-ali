@@ -23,5 +23,10 @@ public class Root implements Serializable{
 	public void setMeta(Meta meta) {
 		this.meta = meta;
 	}
+	@Override
+	public String toString() {
+		return "Root [events=" + events + ", meta=" + meta + "]";
+	}
+	
 	
 }

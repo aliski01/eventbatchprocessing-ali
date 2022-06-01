@@ -35,7 +35,7 @@ public class EventSetter {
 		event.setDomain_information(null);
 		event.setEnddatetime_utc(null);
 		event.setEvent_promotion(null);
-		event.setId("12345");
+		event.setId(12345);
 		event.setIs_open(true);
 		event.setLinks(null);
 		event.setPerformers(performers);
